@@ -12,7 +12,7 @@ def register(domain:str):
     def decorator(func):
         if func.__name__ is not None:
             if domain in OBJECTIVE_REGISTRY:
-                raise ValueError(f"Domain '{domain}' 已存在，指向 {EXTRACTOR_REGISTRY[domain].__name__}")
+                raise ValueError(f"Domain '{domain}' 已存在，指向 {OBJECTIVE_REGISTRY[domain].__name__}")
             OBJECTIVE_REGISTRY[domain]=func
         else :  raise ValueError(f"Empty function name")
         return func

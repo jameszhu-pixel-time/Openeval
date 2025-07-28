@@ -40,7 +40,12 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
 | **July 8** | Finish evaluation for Math & GPQA tasks        |
 | **July 9** | Begin design of flexible registry functions    |
 | **July 12**| Build end-to-end pipeline; prepare HF API demo |
-
+---
+##Quick Start
+- view run/eval/infer.sh for quick start. Replace the path to your own model/datasets
+- run ```./run.sh ``` for quick start
+- Openeval/run.py is the main entry point, supporting infer,eval, and pipeline three modes
+- to view datasets, locate your dataset to Openeval/datasets/test_data and run  ```python -m Openeval.datasets.overview ```
 ---
 ## How to List
 ### Full Pipeline:
@@ -66,5 +71,6 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
     - Components:
       - Evaluator: handles the evaluation logic, supports LLM judger and Objective judger.
       - Extractor: handles the extraction logic, supports Objective extractor.
+    - Check entry point at Openeval/eval/run_eval.py
   - Logs:
     - view logs in ./logs
