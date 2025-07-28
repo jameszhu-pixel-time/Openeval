@@ -3,7 +3,7 @@
 python -m Openeval.run pipeline \
   --data ./Openeval/datasets/test_data/aime\*.jsonl \
   --batch_size 8 \
-  --sampling_params '{"temperature":0.9,"top_p":0.85,"max_tokens":8192,"n":1,"presence_penalty":1,"repetition_penalty":1.2}' \
+  --sampling_params '{"temperature":0.9,"top_p":0.85,"max_tokens":100,"n":1,"presence_penalty":1,"repetition_penalty":1.2}' \
   --model /DATA/disk2/rlteam/models/checkpoint0724 \
   --tensor_parallel_size 1 \
   --mode Objective \

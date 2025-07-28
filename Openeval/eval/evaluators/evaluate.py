@@ -43,7 +43,7 @@ def evaluate_objective(details: List[Dict], dataset_name: str,
         result[f"pass@{k_} detailed id"]=idx
             
     if output :  
-        Path(output).parent.mkdir(parents=True, exist_ok=True)
+        Path(os.path.join(output,dataset_name)+'.jsonl').parent.mkdir(parents=True, exist_ok=True)
         with open(os.path.join(output,dataset_name)+'.jsonl', "w", encoding="utf-8") as fw:
             fw.write(json.dumps(ex_record, ensure_ascii=False, indent=2))
         logger.info("output extraction finished:", result)
@@ -83,7 +83,7 @@ async def evaluate_llm(details: List[Dict], dataset_name: str,
                     logger.info(f"ex_recording:{ex_record}")
             result[dataset_name].append({"acc@%d" % k_: correct / total if total else 0.0,"total": total, "correct": correct}) ##统计 str：Dict
     if output :  
-        Path(output).parent.mkdir(parents=True, exist_ok=True)
+        Path(os.path.join(output,dataset_name)+'.jsonl').parent.mkdir(parents=True, exist_ok=True)
         with open(os.path.join(output,dataset_name)+'.jsonl', "w", encoding="utf-8") as fw:
             fw.write(json.dumps(ex_record, ensure_ascii=False, indent=2))
         logger.info("output extraction finished:", result)

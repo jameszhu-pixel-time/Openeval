@@ -1,5 +1,5 @@
 python -m Openeval.run infer \
-  --data ./Openeval/datasets/test_data/aime25.jsonl \
+  --data ./Openeval/datasets/test_data/aime\*.jsonl \
   --batch_size 8 \
   --endpoint http://10.200.250.35:7005/generate \
   --prediction_dir predictions/qwen2.5_instruct_7b \

@@ -9,7 +9,7 @@ python -m Openeval.run eval \
   --judge_host      10.200.250.35 \
   --judge_port      7001 \
   --judge_tensor_parallel_size 1 \
-  -ex ./debugging
+  -ex ./debugging/ed
 
 
 
