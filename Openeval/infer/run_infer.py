@@ -1,0 +1,223 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+High-throughput inference runner for vLLM HTTP server.
+"""
+
+import argparse, asyncio, json, logging, os, sys
+from pathlib import Path
+from typing import Dict, List
+
+import httpx
+from tqdm.asyncio import tqdm  # pip install tqdm
+from Openeval.infer.online_batch import start_vllm_server
+from Openeval.datasets.utils.load_data import read_jsonl
+from Openeval.datasets.utils.load_data import load_data_with_prompt  # ← 根据你的包路径调整
+# Openeval/infer/run_infer.py  （放在文件最顶部 import 之后）
+
+# ----------------------------------------------------------------------
+def setup_logging(level: str = "INFO"):
+    logging.basicConfig(
+        level=getattr(logging, level.upper(), logging.INFO),
+        format="%(asctime)s | %(levelname)s | %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+    return logging.getLogger(__name__)
+#-----------------------------------------------------------------------
+import multiprocessing as mp, socket, time, logging
+
+def port_open(host, port) -> bool:
+    with socket.socket() as s:
+        return s.connect_ex((host, port)) == 0
+
+def wait_port(host, port, timeout=30):
+    for _ in range(timeout):
+        if port_open(host, port):
+            return True
+        time.sleep(1)
+    return False
+
+def launch_vllm_proc(model, host, port, tp):
+    ctx = mp.get_context("spawn")          # 避免 fork CUDA 问题
+    p   = ctx.Process(target=start_vllm_server,
+                      args=(model,),
+                      kwargs=dict( port=port,
+                                  tensor_parallel_size=tp
+                                 ),
+                ) 
+    p.start()
+    return p
+
+import psutil, signal, os, time
+
+def _kill_proc_tree(pid: int, sig=signal.SIGTERM, timeout=5):
+    """杀掉 pid 及其所有子进程；超时后改用 SIGKILL"""
+    parent = psutil.Process(pid)
+    children = parent.children(recursive=True)
+    for c in children:           # 先温柔
+        c.send_signal(sig)
+    parent.send_signal(sig)
+
+    gone, alive = psutil.wait_procs(children + [parent], timeout=timeout)
+    if alive:                    # 还活着就强杀
+        for p in alive:
+            p.kill()
+        psutil.wait_procs(alive, timeout=2)
+
+# ----------------------------------------------------------------------
+async def infer_batch(
+    prompts: List[str],
+    endpoint: str,
+    sampling_params: Dict,
+    client: httpx.AsyncClient,
+    retry: int = 3,
+) -> List[str]:
+    """Post a batch & return list[str] predictions with simple retry."""
+    try:
+        payload = {"prompt": prompts, "sampling_params": sampling_params}
+        for attempt in range(retry):
+            try:
+                resp = await client.post(endpoint, json=payload, timeout=None)
+                resp.raise_for_status()
+                return resp.json()["text"]
+            except Exception as e:
+                if attempt == retry - 1:
+                    raise
+                await asyncio.sleep(2.0)
+                logging.getLogger(__name__).warning("Retry %s/%s: %s", attempt + 1, retry, e)
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code in {400, 422, 500}:      # 都打印一下
+            logging.error("SERVER-%s detail: %s",
+                        e.response.status_code, e.response.text)
+
+# ----------------------------------------------------------------------
+async def run_single_file(
+    src_path: Path,
+    endpoint: str,
+    sampling_params: Dict,
+    batch_size: int,
+    output_dir: Path,
+    model: str,
+    code : bool = True
+) -> str:
+    logger = logging.getLogger(__name__)
+    name = src_path.stem
+    dst_path = output_dir / f"{name}_{model}_pred.jsonl"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. 准备 prompt 数据（边写边用，不占大内存）
+    # data: List[Dict] = load_data_with_prompt(str(src_path))  # List[dict]
+    data : List[Dict] = read_jsonl(str(src_path)) ##直接读
+    logger.info(f"Dataloaded:{str(src_path)}")
+    async with httpx.AsyncClient(timeout=None) as client:
+        with dst_path.open("w", encoding="utf-8") as wf:
+            pbar = tqdm(total=len(data), desc=f"Infer {name}", unit="q")
+            for i in range(0, len(data), batch_size):
+                chunk = data[i : i + batch_size]
+                prompts = [item["prompt"] for item in chunk]
+                preds = await infer_batch(prompts, endpoint, sampling_params, client)
+                logger.info('______DEBUGGING______')
+                logger.info(f"preds:{len(preds)}")
+                logger.info(f"{len(preds[0])}")
+                logger.info(f"chunk:{len(chunk)}")
+                logger.info(f"chunk id{[i['id'] for i in chunk]}")
+                # 写结果
+                for item, pred in zip(chunk, preds):
+                 # pred: 可能是 str 也可能是 list[str]
+                    if isinstance(pred, str):
+                        pred_list = [pred.strip()]               # n == 1 → 包成 list
+                    else:
+                        pred_list = [p.strip() for p in pred]    # n >= 1 → 保留全部候选
+
+                    out = {
+                        "id": item["id"],
+                        "prompt": item["prompt"],
+                        "prediction": pred_list,   # 统一写 list
+                    }
+                    if "answer" in item:
+                        out["answer"] = item["answer"]
+                    if code: ##代替attr判定逻辑
+                        for key,v in item.items():
+                            if key in ["extra_info"]:
+                                out[key]=item[key]
+                    wf.write(json.dumps(out, ensure_ascii=False) + "\n")
+                pbar.update(len(chunk))
+            pbar.close()
+        logger.info(" %s done, saved to %s", name, dst_path)
+        return dst_path
+
+# ----------------------------------------------------------------------
+async def main(args: argparse.Namespace,return_paths:bool = True)->List:
+    logger = setup_logging(args.loglevel)
+    sampling_params: Dict = json.loads(args.sampling_params)
+
+    files = [Path(p) for pat in args.data.split() for p in Path().glob(pat)]
+    if not files:
+        logger.error("No file matched %s", args.data)
+        sys.exit(1)
+    ## 协程
+    proc=None ##自身开启的进程
+    output_files=[]
+    try:
+        if not port_open(args.host, args.port):
+            logger.info("No active vLLM found — launching…")
+            proc = launch_vllm_proc(args.model, args.host,
+                                    args.port, args.tensor_parallel_size)
+
+            if not wait_port(args.host, args.port, 180):
+                logger.error("vLLM failed to open port in 180s")
+                proc.terminate(); sys.exit(1)
+            logger.info("vLLM is ready")
+        ## 协程
+        else:
+            logger.info("Reuse existing vLLM on %s:%d", args.host, args.port)
+        for fp in files:
+            dst = await run_single_file(
+                        fp,
+                        endpoint=args.endpoint,
+                        sampling_params=sampling_params,
+                        batch_size=args.batch_size,
+                        output_dir=Path(args.prediction_dir),
+                        model=args.m_abbr,
+            )
+            if return_paths:
+                output_files.append(dst)
+            
+    finally:
+        if proc is not None and psutil.pid_exists(proc.pid):
+            logger.info("Shutting down vLLM subprocess group …")
+            _kill_proc_tree(proc.pid)
+            if proc.is_alive():
+                logger.warning("vLLM did not exit in 10 s — killing")
+                proc.kill()
+            logger.info("vLLM subprocess exited")
+    return output_files
+
+# ----------------------------------------------------------------------
+def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    """
+    给统一入口的 sub-parser 添加推理参数。
+    直接复用这里的默认值，保持与单独运行 run_infer.py 一致。
+    """
+    defaultsp='{"temperature":0.9,"top_p":0.85,"max_tokens":4096,"n":12,"presence_penalty": 1,"repetition_penalty":1.2}'
+    parser.add_argument("-d","--data", default='./Openeval/datasets/test_data/aime24.jsonl', help="Raw JSONL or glob (e.g. data/*.jsonl)")
+    parser.add_argument("--endpoint", default="http://10.200.250.35:7000/generate")
+    parser.add_argument("--batch_size", type=int, default=4)
+    parser.add_argument("--prediction_dir", default="predictions")
+    parser.add_argument("--sampling_params", default=defaultsp)
+    parser.add_argument("--loglevel", default="INFO")
+    parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-8B")
+    parser.add_argument("--host", type=str, default="10.200.250.35", help="Host IP")
+    parser.add_argument("--port", type=int, default=7000, help="Port number")
+    parser.add_argument("-t","--tensor_parallel_size", type=int, default=1, help="Tensor parallel size")
+    parser.add_argument("--m_abbr", type=str, default='qwen2.5_7b', help="abbr model_name")
+    return parser
+
+if __name__ == "__main__":
+    parser=build_cli(argparse.ArgumentParser("High-throughput vLLM inference"))
+    args=parser.parse_args()
+    try:
+        asyncio.run(main(args))
+    except KeyboardInterrupt:
+        print("Interrupted ⌃C")

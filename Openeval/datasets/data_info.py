@@ -1,0 +1,22 @@
+##tmp dictionary keeping datasets info
+Datadic=dict(
+    aime24={'domain':'math'},
+    aime25={'domain':'math'},
+    alignbench={'domain':'infer'},
+    codeforces={'domain':'code'},
+    gpqa_diamond={'domain':'gpqa'},
+    gpqa={'domain':'gpqa'},
+    gsm8k={'domain':'math'},
+    livecodebench={'domain':'code'},
+    math500={'domain':'math'},
+    merged_top90_filtered={'domain':'math'},
+    merged={'domain':'math'},
+    deduped_questions_00_of_03={'domain':'math'},
+    deduped={'domain':'math'},
+    Post_Dataset_1={'domain':'math'}
+)
+Promptdic=dict(
+    math='./prompts/rule_prompt_utils_math.py',
+    gpqa='./prompts/rule_prompt_utils_gpqa.py',
+    code='./prompts/rule_prompt_utils_code.py'
+)
