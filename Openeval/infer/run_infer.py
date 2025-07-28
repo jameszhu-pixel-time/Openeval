@@ -13,6 +13,7 @@ from tqdm.asyncio import tqdm  # pip install tqdm
 from Openeval.infer.online_batch import start_vllm_server
 from Openeval.datasets.utils.load_data import read_jsonl
 from Openeval.datasets.utils.load_data import load_data_with_prompt  # ← 根据你的包路径调整
+from Openeval.datasets.utils.load_data import load_data_with_ds_prompt
 # Openeval/infer/run_infer.py  （放在文件最顶部 import 之后）
 
 # ----------------------------------------------------------------------
@@ -100,7 +101,8 @@ async def run_single_file(
     output_dir: Path,
     model: str,
     code : bool = True,
-    processed : bool = False
+    processed : bool = False,
+    ds : bool = False
 ) -> str:
     logger = logging.getLogger(__name__)
     name = src_path.stem
@@ -109,10 +111,13 @@ async def run_single_file(
 
     if processed==True:
         data : List[Dict] = read_jsonl(str(src_path)) ##直接读
-    else:
+    elif ds==False:
         data: List[Dict] = load_data_with_prompt(str(src_path),False)  # List[dict]做预处理
         logger.info("load_data with prompt")
-        logger.info(f"{data}")
+    else :
+        data: List[Dict] = load_data_with_ds_prompt(str(src_path),False)  # List[dict]做预处理
+        logger.info("load_data with difficulty selection prompts")
+        
     
     async with httpx.AsyncClient(timeout=None) as client:
         with dst_path.open("w", encoding="utf-8") as wf:
@@ -184,7 +189,8 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
                         batch_size=args.batch_size,
                         output_dir=Path(args.prediction_dir),
                         model=args.m_abbr,
-                        processed=args.processed
+                        processed=args.processed,
+                        ds = args.difficulty_selection
             )
             if return_paths:
                 output_files.append(dst)
@@ -218,6 +224,7 @@ def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     parser.add_argument("-t","--tensor_parallel_size", type=int, default=1, help="Tensor parallel size")
     parser.add_argument("--m_abbr", type=str, default='qwen2.5_7b', help="abbr model_name")
     parser.add_argument("--processed", action="store_true", help="read from processed file")
+    parser.add_argument("--difficulty_selection", action="store_true", help="perform difficulty selection")
     return parser
 
 if __name__ == "__main__":

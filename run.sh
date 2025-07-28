@@ -10,7 +10,9 @@ python -m Openeval.run pipeline \
   --k 1 8 \
   --model_abbr checkpoint0724 \
   --eval_out_dir evaluations/checkpoint0724 \
-  --judge_model /DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B
+  --judge_model /DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B \
+  --difficulty_selection
+
   
                                    
 # --data:经过处理的数据，必须包含 prompt 加入过prompt的）与 answer（数值答案）
