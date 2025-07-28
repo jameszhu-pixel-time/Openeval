@@ -43,6 +43,7 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
 ---
 ## Quick Start
 - run `conda env create -f environment.yml`  or `pip install -r requirements.txt` to set up the environment.
+  - Note: you may need to install `vllm` from source, as the latest version may not be compatible with the current code.
 - view `run/eval/infer.sh` for quick start. Replace the path to your own model or datasets
 - run ```./run.sh ``` for quick start
 - `Openeval/run.py` is the main entry point, supporting infer,eval, and pipeline three modes
