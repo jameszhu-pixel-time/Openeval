@@ -219,4 +219,4 @@ dependencies:
       - yarl==1.20.0
       - zipp==3.22.0
       - zstandard==0.23.0
-prefix: /DATA/disk1/zhurui/envs/vllm
+#prefix: /DATA/disk1/zhurui/envs/vllm

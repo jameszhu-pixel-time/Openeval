@@ -41,7 +41,8 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
 | **July 9** | Begin design of flexible registry functions    |
 | **July 12**| Build end-to-end pipeline; prepare HF API demo |
 ---
-##Quick Start
+## Quick Start
+- run `conda env create -f environment.yml`  or `pip install -r requirements.txt` to set up the environment.
 - view run/eval/infer.sh for quick start. Replace the path to your own model/datasets
 - run ```./run.sh ``` for quick start
 - Openeval/run.py is the main entry point, supporting infer,eval, and pipeline three modes
