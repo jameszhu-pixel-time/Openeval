@@ -48,11 +48,23 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
     - all registered datasets are included in Openeval/datasets/data_info.py
     - when adding a new dataset, you need to update datadict and ./utils/data_format for its information(i.e. domains) and preprocessing functions
     - checkout what's in ./utils/data_format
-    - You can run overview.py to get an overview of the dataset.
+    - You can run overview.py to get an overview of the dataset. If output post-processing is delcared in load_data.py, view it in Openeval/datasets/formatted_data
   ### Important: The processed data must at least contain:
     - question
     - answer
   - Infernce
     - Start a vllm engine
       - Openeval/infer/online_batch.py is the main logic; run_infer is the entry point
+    - run_infer:
+      - run_infer check all files in the given directory and run inference on them sequentially.
+      - parameter follows vllm's apis.
+      - if you process data manually by running load_data.py, set  --process_data = True and --data <formatted_data directory>;
+      - if you want run on raw data(registerd datasets),set --process_data = False and --data <test_data directory>
+      - Path supports single file_path and glob pattern.
   - Evaluation
+    - Process: extract from perdiction -> judge with LLM/Objective judge -> get score
+    - Components:
+      - Evaluator: handles the evaluation logic, supports LLM judger and Objective judger.
+      - Extractor: handles the extraction logic, supports Objective extractor.
+  - Logs:
+    - view logs in ./logs
