@@ -61,6 +61,7 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
   - Infernce
     - Start a vllm engine
       - Openeval/infer/online_batch.py is the main logic; run_infer is the entry point
+      - Remember to align local host endpoint with point: i.e [http](http://0.0.0.0:7005/generate) vs --port 7005
     - run_infer:
       - run_infer check all files in the given directory and run inference on them sequentially.
       - parameter follows vllm's apis.

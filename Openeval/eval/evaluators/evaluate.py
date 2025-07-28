@@ -10,6 +10,7 @@ from tqdm import tqdm
 from ...datasets.prompts.llm_math_jd import grader_prompt_temp
 logger = logging.getLogger(__name__)
 from ..evaluators import OBJECTIVE_REGISTRY
+import os
 #========================================== ===============
 #  主评测逻辑 1. 客观评测
 # =========================================================
@@ -43,10 +44,10 @@ def evaluate_objective(details: List[Dict], dataset_name: str,
             
     if output :  
         Path(output).parent.mkdir(parents=True, exist_ok=True)
-        with open(output, "w", encoding="utf-8") as fw:
+        with open(os.path.join(output,dataset_name)+'.jsonl', "w", encoding="utf-8") as fw:
             fw.write(json.dumps(ex_record, ensure_ascii=False, indent=2))
         logger.info("output extraction finished:", result)
-        logger.info(f"debugging mode: output extraction file to{output} ")
+        logger.info(f"debugging mode: output extraction file to{os.path.join(output,dataset_name)+'.jsonl'} ")
     return result
 #2.LLM 评测:
 
@@ -83,10 +84,10 @@ async def evaluate_llm(details: List[Dict], dataset_name: str,
             result[dataset_name].append({"acc@%d" % k_: correct / total if total else 0.0,"total": total, "correct": correct}) ##统计 str：Dict
     if output :  
         Path(output).parent.mkdir(parents=True, exist_ok=True)
-        with open(output, "w", encoding="utf-8") as fw:
+        with open(os.path.join(output,dataset_name)+'.jsonl', "w", encoding="utf-8") as fw:
             fw.write(json.dumps(ex_record, ensure_ascii=False, indent=2))
-        logger.info("output extraction finished:")
-        logger.info(f"debugging mode: output extraction file to{output} ")
+        logger.info("output extraction finished:", result)
+        logger.info(f"debugging mode: output extraction file to{os.path.join(output,dataset_name)+'.jsonl'} ")
     return result
 
 

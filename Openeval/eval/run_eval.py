@@ -9,6 +9,7 @@ import  Openeval.utils.log       # 先初始化
 import os
 import logging
 from pathlib import Path 
+import glob
 ##先导入，注册才生效
 import Openeval.eval.evaluators.math_judger,Openeval.eval.extracters.math_extracters,Openeval.eval.utils
 
@@ -88,54 +89,72 @@ def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
 def main(args: argparse.Namespace):
     # ---------- 识别数据集名 ----------
     
-    filename = os.path.basename(args.eval_data)
-    m = re.search(r"([^/]+?)_.*\.jsonl$", filename)
-    if not m:
-        raise ValueError("eval_data 文件名需形如 xxx_pred.jsonl")
-    dataset_name = m.group(1)
-    if dataset_name not in Datadic:
-        raise KeyError(f"{dataset_name} 不在 Datadic 中")
+    # filename = os.path.basename(args.eval_data)
+    # m = re.search(r"([^/]+?)_.*\.jsonl$", filename)
+    # if not m:
+    #     raise ValueError("eval_data 文件名需形如 xxx_pred.jsonl")
+    # dataset_name = m.group(1)
+    # if dataset_name not in Datadic:
+    #     raise KeyError(f"{dataset_name} 不在 Datadic 中")
 
-    # ---------- 读取预测 ----------
+    # # ---------- 读取预测 ----------
+    # proc=None
+    # samples = load_predictions(args.eval_data)
+    # logger.info('loading completes')
+    matched_files = sorted(glob.glob(args.eval_data))
     proc=None
-    samples = load_predictions(args.eval_data)
-    logger.info('loading completes')
-    # ---------- 分支评测 ----------
-    if args.mode == "Objective":
-        result = evaluate_objective(
-            samples,
-            dataset_name,
-            k=args.k,                 # 一次多个 k
-            output=args.extraction_path
-        )
+    if not matched_files:
+        raise FileNotFoundError(f"No file matches: {args.eval_data}")
+    
+    for eval_file in matched_files:
+        logger.info(f"Processing file: {eval_file}")
 
-    else:  # LLM 判定
-        if not port_is_open(args.judge_host, args.judge_port):
-            logger.warning("No active vLLM found — launching …")
-            proc = launch_vllm_bg(args)
-            if not wait_port(args.judge_host, args.judge_port, 30):
-                logger.error("vLLM failed to open port"); proc.terminate(); sys.exit(1)
-            logger.info("vLLM is ready")
-        else:
-            logger.warning("Port already used, check the model running, the evaluation process will be based on that model")
-        endpoint = args.judge_endpoint or f"http://{args.judge_host}:{args.judge_port}/generate"
-        result = asyncio.run(
-            evaluate_llm(
+        filename = os.path.basename(eval_file)
+        m = re.search(r"([^/]+?)_.*\.jsonl$", filename)
+        if not m:
+            raise ValueError("eval_data 文件名需形如 xxx_pred.jsonl")
+        dataset_name = m.group(1)
+        if dataset_name not in Datadic:
+            raise KeyError(f"{dataset_name} 不在 Datadic 中")
+
+        samples = load_predictions(eval_file)
+        logger.info('loading completes')
+        # ---------- 分支评测 ----------
+        if args.mode == "Objective":
+            result = evaluate_objective(
                 samples,
                 dataset_name,
-                endpoint,
-                k=args.k,
+                k=args.k,                 # 一次多个 k
                 output=args.extraction_path
             )
-        )
 
-    ##补充model name
-    result["model_name"]=args.model_abbr
-    # ---------- 输出 ----------
-    Path(args.eval_out_dir).parent.mkdir(parents=True, exist_ok=True)
-    with open(args.eval_out_dir, "w", encoding="utf-8") as fw:
-        fw.write(json.dumps(result, ensure_ascii=False, indent=2))
-    logger.info("✔ Eval finished")
+        else:  # LLM 判定
+            if not port_is_open(args.judge_host, args.judge_port):
+                logger.warning("No active vLLM found — launching …")
+                proc = launch_vllm_bg(args)
+                if not wait_port(args.judge_host, args.judge_port, 30):
+                    logger.error("vLLM failed to open port"); proc.terminate(); sys.exit(1)
+                logger.info("vLLM is ready")
+            else:
+                logger.warning("Port already used, check the model running, the evaluation process will be based on that model")
+            endpoint = args.judge_endpoint or f"http://{args.judge_host}:{args.judge_port}/generate"
+            result = asyncio.run(
+                evaluate_llm(
+                    samples,
+                    dataset_name,
+                    endpoint,
+                    k=args.k,
+                    output=args.extraction_path
+                )
+            )
+
+        ##补充model name
+        result["model_name"]=args.model_abbr
+        # ---------- 输出 ----------
+        Path(os.path.join(args.eval_out_dir,dataset_name+"_"+args.model_abbr+'.jsonl')).parent.mkdir(parents=True, exist_ok=True)
+        with open(os.path.join(args.eval_out_dir,dataset_name+"_"+args.model_abbr+'.jsonl'), "w", encoding="utf-8") as fw:
+            fw.write(json.dumps(result, ensure_ascii=False, indent=2))
+        logger.info("✔ Eval finished")
     if proc is not None and proc.is_alive():
             logger.info("Shutting down vLLM subprocess…")
             proc.terminate()          

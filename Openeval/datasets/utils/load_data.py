@@ -44,7 +44,7 @@ def pick_prompt_module(domain: str):
             return m
     raise ValueError(f"No prompt module found for domain={domain}")
 
-def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[List[Dict]]:
+def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Dict]:
     """
     读取 JSONL → 渲染 system/user prompt → 返回 [{'id','prompt','answer'?}, ...]
     若 output 为字符串目录 / Path，则把结果写入 <output>/<dataset>.jsonl
@@ -141,12 +141,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Load data and render prompts")
     parser.add_argument(
         "-p", "--path",
-        default="Openeval/datasets/unregistered_datasets/codeforces.jsonl",
+        default="Openeval/datasets/test_data/aime25.jsonl",
         help="Glob 模式，匹配 JSONL 文件"
     )
     parser.add_argument(
         "-o", "--output",
-        default='Openeval/datasets/formatted_data/codeforces.jsonl',
+        default='Openeval/datasets/formatted_data/',
         help="输出后处理prompt格式文件"
     )
     args = parser.parse_args()

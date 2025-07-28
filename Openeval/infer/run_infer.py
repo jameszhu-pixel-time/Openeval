@@ -99,17 +99,21 @@ async def run_single_file(
     batch_size: int,
     output_dir: Path,
     model: str,
-    code : bool = True
+    code : bool = True,
+    processed : bool = False
 ) -> str:
     logger = logging.getLogger(__name__)
     name = src_path.stem
     dst_path = output_dir / f"{name}_{model}_pred.jsonl"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. 准备 prompt 数据（边写边用，不占大内存）
-    # data: List[Dict] = load_data_with_prompt(str(src_path))  # List[dict]
-    data : List[Dict] = read_jsonl(str(src_path)) ##直接读
-    logger.info(f"Dataloaded:{str(src_path)}")
+    if processed==True:
+        data : List[Dict] = read_jsonl(str(src_path)) ##直接读
+    else:
+        data: List[Dict] = load_data_with_prompt(str(src_path),False)  # List[dict]做预处理
+        logger.info("load_data with prompt")
+        logger.info(f"{data}")
+    
     async with httpx.AsyncClient(timeout=None) as client:
         with dst_path.open("w", encoding="utf-8") as wf:
             pbar = tqdm(total=len(data), desc=f"Infer {name}", unit="q")
@@ -180,6 +184,7 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
                         batch_size=args.batch_size,
                         output_dir=Path(args.prediction_dir),
                         model=args.m_abbr,
+                        processed=args.processed
             )
             if return_paths:
                 output_files.append(dst)
@@ -202,16 +207,17 @@ def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     """
     defaultsp='{"temperature":0.9,"top_p":0.85,"max_tokens":4096,"n":12,"presence_penalty": 1,"repetition_penalty":1.2}'
     parser.add_argument("-d","--data", default='./Openeval/datasets/test_data/aime24.jsonl', help="Raw JSONL or glob (e.g. data/*.jsonl)")
-    parser.add_argument("--endpoint", default="http://10.200.250.35:7000/generate")
+    parser.add_argument("--endpoint", default="http://10.200.250.35:7005/generate")
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--prediction_dir", default="predictions")
     parser.add_argument("--sampling_params", default=defaultsp)
     parser.add_argument("--loglevel", default="INFO")
     parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-8B")
     parser.add_argument("--host", type=str, default="10.200.250.35", help="Host IP")
-    parser.add_argument("--port", type=int, default=7000, help="Port number")
+    parser.add_argument("--port", type=int, default=7005, help="Port number")
     parser.add_argument("-t","--tensor_parallel_size", type=int, default=1, help="Tensor parallel size")
     parser.add_argument("--m_abbr", type=str, default='qwen2.5_7b', help="abbr model_name")
+    parser.add_argument("--processed", action="store_true", help="read from processed file")
     return parser
 
 if __name__ == "__main__":
