@@ -3,7 +3,7 @@ python -m Openeval.run eval \
   --mode       Objective \
   --k          1 \
   -a           qwen2.5_7b \
-  --eval_out_dir     ./evaluations/qwen \
+  --eval_out_dir     ./evaluations/test \
   --judge_endpoint http://10.200.250.35:7001/generate \
   --judge_model     /DATA/disk2/rlteam/models/checkpoint0724\
   --judge_host      10.200.250.35 \

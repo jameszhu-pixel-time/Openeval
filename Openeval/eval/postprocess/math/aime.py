@@ -107,7 +107,7 @@ def _normalize(ans: str) -> str:
     return ans.strip().lstrip("$").strip()
 
 # ──────────────────────────────────────────────────────────
-def extract_math_line(f_line: Union[str, List[str]], thres: int = 100) -> List[str]:
+def extract_math_line(f_line: Union[str, List[str]], thres: int = 10) -> List[str]:
     """
     从 Math-QA 预测文本中提取候选答案（只取 “Final answer:” 之后的内容）。
 

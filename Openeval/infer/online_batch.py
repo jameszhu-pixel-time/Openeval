@@ -67,9 +67,9 @@ def start_vllm_server(model_path, host="0.0.0.0", port=7000, tensor_parallel_siz
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="vLLM Server")
-    parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-8B")
+    parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk2/rlteam/models/checkpoint0724")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host IP")
-    parser.add_argument("--port", type=int, default=7000, help="Port number")
+    parser.add_argument("--port", type=int, default=7005, help="Port number")
     parser.add_argument("-t","--tensor_parallel_size", type=int, default=1, help="Tensor parallel size")
     args = parser.parse_args()
 

@@ -101,8 +101,7 @@ async def run_single_file(
     output_dir: Path,
     model: str,
     code : bool = True,
-    processed : bool = False,
-    ds : bool = False
+    processed : bool = False
 ) -> str:
     logger = logging.getLogger(__name__)
     name = src_path.stem
@@ -111,12 +110,10 @@ async def run_single_file(
 
     if processed==True:
         data : List[Dict] = read_jsonl(str(src_path)) ##直接读
-    elif ds==False:
+    else:
         data: List[Dict] = load_data_with_prompt(str(src_path),False)  # List[dict]做预处理
         logger.info("load_data with prompt")
-    else :
-        data: List[Dict] = load_data_with_ds_prompt(str(src_path),False)  # List[dict]做预处理
-        logger.info("load_data with difficulty selection prompts")
+        
         
     
     async with httpx.AsyncClient(timeout=None) as client:
@@ -160,8 +157,11 @@ async def run_single_file(
 async def main(args: argparse.Namespace,return_paths:bool = True)->List:
     logger = setup_logging(args.loglevel)
     sampling_params: Dict = json.loads(args.sampling_params)
-
-    files = [Path(p) for pat in args.data.split() for p in Path().glob(pat)]
+    if args.difficulty_selection == True: ##改主函数，统一load 后返回file_paths再分发
+        _,files = load_data_with_ds_prompt(args.data,output=True)
+    else:
+        files = [Path(p) for pat in args.data.split() for p in Path().glob(pat)]
+        logger.info(f"prompts loaded (ds) {files}")
     if not files:
         logger.error("No file matched %s", args.data)
         sys.exit(1)
@@ -189,8 +189,7 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
                         batch_size=args.batch_size,
                         output_dir=Path(args.prediction_dir),
                         model=args.m_abbr,
-                        processed=args.processed,
-                        ds = args.difficulty_selection
+                        processed=args.processed or args.difficulty_selection,
             )
             if return_paths:
                 output_files.append(dst)

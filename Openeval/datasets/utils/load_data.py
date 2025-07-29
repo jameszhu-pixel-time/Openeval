@@ -16,13 +16,14 @@ import Openeval.utils.log
 logger = logging.getLogger(__name__) 
 ##format
 # from .datasets.data_info import Datadic
-from ..prompts import rule_prompt_utils_code, rule_prompt_utils_gpqa, rule_prompt_utils_math
+from ..prompts import rule_prompt_utils_code, rule_prompt_utils_gpqa, rule_prompt_utils_math, difficult_selection
 PROMPT_MODULES = [
     rule_prompt_utils_code, 
     rule_prompt_utils_gpqa,
     rule_prompt_utils_math,
 ]
 #from ..prompts.difficulty import prompt_aime24,prompt_difficulty
+
 
 def read_jsonl(file_path: str) -> List[Dict]:
     """读取单个 JSONL 文件，返回字典列表"""
@@ -43,7 +44,12 @@ def pick_prompt_module(domain: str):
         if domain in m.__name__:
             return m
     raise ValueError(f"No prompt module found for domain={domain}")
-
+def load_ds_prompt()->List[dict]:
+    '''
+    这里指定难度选择的prompt list file path，
+    这里采用模块化导入方式
+    '''
+    return difficult_selection
 def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Dict]:
     """
     读取 JSONL → 渲染 system/user prompt → 返回 [{'id','prompt','answer'?}, ...]
@@ -62,6 +68,10 @@ def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Di
 
     # ---------- 2) 数据集名 & domain ----------
     name = fp.stem                              # e.g. "aime24"
+    match = re.search(r"(^.*?)_.*",name)
+    if match is None:
+        raise KeyError(f"{name} 不在 Datadic 定义里")
+    name = match.group(1)
     if name not in Datadic:
         raise KeyError(f"{name} 不在 Datadic 定义里")
     domain = Datadic[name]["domain"]
@@ -136,6 +146,67 @@ def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Di
 
     return out
 
+def load_data_with_ds_prompt(file_path: str, output: str | bool =True )-> List[List[Dict]]:## from 1 original dataset -> multiple prompt loaded datasets
+    fp = Path(file_path)
+    logger.info("开始处理 %s", fp)
+    if output:
+        output='Openeval/datasets/formatted_data'
+    # ---------- 1) 读原始 JSONL ----------
+    try:
+        records = [json.loads(l) for l in fp.read_text(encoding="utf-8").splitlines() if l.strip()]
+    except json.JSONDecodeError:
+        logger.exception("JSON 解析失败: %s", fp)
+        raise
+
+    # ---------- 2) 数据集名 & domain ----------
+    name = fp.stem                              # e.g. "aime24"
+    if name not in Datadic:
+        raise KeyError(f"{name} 不在 Datadic 定义里")
+
+
+    # ---------- 3) 取 prompt 模块 ----------###
+    prompt_mod = load_ds_prompt()
+    
+    tpl_dict_list   = prompt_mod.system_prompt_temp  
+    out_list=[]
+    out_fp_list=[]##生成path
+    for idx,tpl_dict in enumerate(tpl_dict_list):
+        # ---------- 4) LangChain 模板 ----------
+        system_tpl = PromptTemplate.from_template(tpl_dict["system"])
+        user_tpl   = PromptTemplate.from_template(tpl_dict["user"])
+        needed_vars = set(user_tpl.input_variables)
+
+        # ---------- 5) 预处理数据 ----------
+        records_fmt = data_format(name, records)
+
+        # ---------- 6) 渲染 ---------------------
+        out: List[Dict] = []
+        for rec in records_fmt:
+            try:
+                user_vars   = {k: v for k, v in rec.items() if k in needed_vars}
+                prompt_text = system_tpl.format() + "\n\n" + user_tpl.format(**user_vars)
+                item = {"prompt_id":idx,"prompt_template":tpl_dict,"id": rec.get("id"), "prompt": prompt_text}
+                if "answer" in rec:
+                    item["answer"] = rec["answer"]
+                out.append(item)
+            except Exception:
+                logger.exception("渲染记录失败 id=%s", rec.get("id"))
+                raise
+        out_list.append(out)
+
+        logger.info("完成 %s：共渲染 %d 条 prompt", name+f'_promptid_{idx}', len(out))
+        if output:
+            out_dir = Path(output)
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_fp = out_dir / f"{name}_promptid_{idx}.jsonl"
+
+            with out_fp.open("w", encoding="utf-8") as wf:
+                for obj in out:
+                    wf.write(json.dumps(obj, ensure_ascii=False) + "\n")
+
+            logger.info("结果已写入 %s", out_fp)
+            out_fp_list.append(out_fp)##路径问题注意
+    return out_list,out_fp_list
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Load data and render prompts")

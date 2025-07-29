@@ -40,6 +40,7 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
 | **July 8** | Finish evaluation for Math & GPQA tasks        |
 | **July 9** | Begin design of flexible registry functions    |
 | **July 12**| Build end-to-end pipeline; prepare HF API demo |
+| **July 28**| add difficult selection to pipeline function   |
 ---
 ## Quick Start
 - run `conda env create -f environment.yml`  or `pip install -r requirements.txt` to set up the environment.
