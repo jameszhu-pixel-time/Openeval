@@ -5,7 +5,7 @@ python -m Openeval.run infer \
   --prediction_dir predictions/qwen2.5_instruct_7b \
   --sampling_params '{"temperature":0.9,"top_p":0.85,"max_tokens":8192,"n":1,"presence_penalty":0.8,"repetition_penalty":0.8}' \
   --loglevel INFO \
-  --model /DATA/disk2/rlteam/models/checkpoint0724\
+  --model /DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b \
   --port 7005 \
   --tensor_parallel_size 1 \
   --host 10.200.250.35 \

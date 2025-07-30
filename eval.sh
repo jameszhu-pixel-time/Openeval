@@ -1,5 +1,5 @@
 python -m Openeval.run eval \
-  --eval_data  predictions/aime\*.jsonl \
+  --eval_data  predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl \
   --mode       Objective \
   --k          1 \
   -a           qwen2.5_7b \
@@ -9,7 +9,7 @@ python -m Openeval.run eval \
   --judge_host      10.200.250.35 \
   --judge_port      7001 \
   --judge_tensor_parallel_size 1 \
-  -ex ./debugging/ed
+  -ex ./debugging/qwen7
 
 
 

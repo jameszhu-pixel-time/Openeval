@@ -50,7 +50,7 @@ def load_ds_prompt()->List[dict]:
     这里采用模块化导入方式
     '''
     return difficult_selection
-def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Dict]:
+def load_data_with_prompt(file_path: str, output: str | bool = 'Openeval/datasets/formatted_data') -> List[Dict]:
     """
     读取 JSONL → 渲染 system/user prompt → 返回 [{'id','prompt','answer'?}, ...]
     若 output 为字符串目录 / Path，则把结果写入 <output>/<dataset>.jsonl
@@ -68,10 +68,10 @@ def load_data_with_prompt(file_path: str, output: str | bool = False) -> List[Di
 
     # ---------- 2) 数据集名 & domain ----------
     name = fp.stem                              # e.g. "aime24"
-    match = re.search(r"(^.*?)_.*",name)
+    match = name.split("_")
     if match is None:
         raise KeyError(f"{name} 不在 Datadic 定义里")
-    name = match.group(1)
+    name = match[0]
     if name not in Datadic:
         raise KeyError(f"{name} 不在 Datadic 定义里")
     domain = Datadic[name]["domain"]

@@ -1,7 +1,14 @@
 from typing import Dict, List, Tuple, Callable, Any
 import logging
 from ..evaluators import register
+from fractions import Fraction
 logger = logging.getLogger(__name__)
+def is_valid_number(s: str) -> bool:
+    try:
+        Fraction(s)
+        return True
+    except Exception:
+        return False
 @register("math")
 def objective_math(preds: List[List[str]], ref: str, k: int = 1) -> bool:
     """
@@ -17,9 +24,17 @@ def objective_math(preds: List[List[str]], ref: str, k: int = 1) -> bool:
     k=min(k,len(preds)) ##防报错
     preds = [p for p in preds[:k]]##    前k个的若干possible ans
     ref   = ref.strip()
-    for pred_ans in preds:
+    for pred_ans in preds: ##一个batch
         for pred_piece in pred_ans: 
-            flag = ref in pred_piece ## in 就行
-            if flag:
+            if pred_piece+'.0' == ref:
+                flag=True
                 return flag
+            if ref == pred_piece: ##表达式
+                flag=True
+                return flag
+            if is_valid_number(pred_piece) and is_valid_number(ref):
+                if Fraction(ref) == Fraction (pred_piece):
+                    flag=True
+                    return flag
+                
     return flag

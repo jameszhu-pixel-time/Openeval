@@ -2,16 +2,20 @@
 # ──────────────────────────────────────────────────────────────
 python -m Openeval.run pipeline \
   --data ./Openeval/datasets/test_data/aime24.jsonl \
-  --batch_size 32 \
-  --sampling_params '{"temperature":0.9,"top_p":0.85,"max_tokens":8192,"n":10,"presence_penalty":1,"repetition_penalty":1.2}' \
+  --batch_size 16 \
+  --sampling_params '{"temperature":0.85,"top_p":0.85,"max_tokens":8192,"n":8,"presence_penalty":1,"repetition_penalty":1.2}' \
   --model /DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b \
-  --tensor_parallel_size 1 \
+  --endpoint http://10.200.250.35:7003/generate \
+  --port 7003 \
+  --tensor_parallel_size 2 \
   --mode Objective \
   --k 1 8 \
-  --model_abbr checkpoint0724 \
-  --eval_out_dir evaluations/checkpoint0724 \
+  --model_abbr qwen7B \
+  --eval_out_dir evaluations/qwen7b \
   --judge_model /DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B \
   --difficulty_selection \
+  --m_abbr qwen2.5_7b \
+  -ex ./debugging/qwen7b
 
   
                                    

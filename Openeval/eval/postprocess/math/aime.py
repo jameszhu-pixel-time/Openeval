@@ -73,76 +73,49 @@ def extract_aime_line(f_line: str | List[str], thres: int = 4) -> List[str]:
     answers = [_num_to_str(ans) for ans in answers]
 
     return answers
-import re
-from typing import List, Tuple, Dict
 
-
-# ------------------------------------------------------------
-# 1)  从一段文本里抓出一个“最终答案”
-# ------------------------------------------------------------
-_PAT_BOX   = re.compile(r"\\boxed\{([^}]+)\}", flags=re.I)
-_PAT_FINAL = re.compile(
-    r"[Ff]inal\s+answer\s*[:：]\s*([^\n\\]+)",  # 捕获到行尾或反斜杠
-    flags=re.I,
-)
-_PAT_NUM = re.compile(r"-?\d+(?:/\d+)?(?:\.\d+)?")  # 兜底纯数字/分数/小数
-
-
+#--------
 import re
 from typing import List, Set, Union
 
-# ──────────────────────────────────────────────────────────
-# ① Final answer: <whatever we want until 换行或字符串结尾>
-# ──────────────────────────────────────────────────────────
+# 更鲁棒的正则表达式
+_PAT_BOX = re.compile(r"(?:\\)?boxed\s*[\{\(]?\s*([^\}\)\n]+?)\s*[\}\)]?", flags=re.I)
 _PAT_FINAL = re.compile(
-    r"[Ff]inal\s+answer\s*[:：]?\s*([^\n]+)",  # 捕到行尾为止
-    flags=re.I,
+    r"[Ff]inal\s+answer\s*[:：]?\s*(?:\\boxed\s*[\{\(]?)?([^\}\)\n\$]+)",  # 不提 $ \n ) }
+    flags=re.I
 )
-
-# ② 兜底数字/分数/小数（若连 Final answer 都没有）
 _PAT_NUM = re.compile(r"-?\d+(?:/\d+)?(?:\.\d+)?")
 
 def _normalize(ans: str) -> str:
-    """基础清洗：去首尾空白、去左侧 $，不做数值转换。"""
-    return ans.strip().lstrip("$").strip()
+    ans = ans.strip()
+    ans = ans.replace(",", "")
+    ans = re.sub(r"\$|\\|\\boxed|boxed", "", ans)
+    ans = re.sub(r"[\(\)\{\}=：:]*$", "", ans)
+    ans = re.sub(r"[^\d\./\-]+", "", ans)
+    return ans.strip()
 
-# ──────────────────────────────────────────────────────────
 def extract_math_line(f_line: Union[str, List[str]], thres: int = 10) -> List[str]:
-    """
-    从 Math-QA 预测文本中提取候选答案（只取 “Final answer:” 之后的内容）。
-
-    参数
-    ----
-    f_line : str | List[str]   原始输出或已 split token 列表
-    thres  : int               返回的最多候选数（去重）
-
-    返回
-    ----
-    answers : List[str]        去重后的候选；若没找到则为空列表
-    """
     text = " ".join(f_line) if isinstance(f_line, list) else str(f_line)
 
     answers: List[str] = []
-    seen:    Set[str]  = set()
+    seen: Set[str] = set()
 
     def _add(val: str):
-        if len(answers) < thres:
-            val = _normalize(val)
-            if val and val not in seen:
-                answers.append(val)
-                seen.add(val)
-    for i,m in enumerate(_PAT_BOX.finditer(text)):
-         _add(m.group(1))
-         if i==thres/2:
-             break
-    # ① Final answer: ...
-    for i,m in enumerate(_PAT_FINAL.finditer(text)):
-        _add(m.group(1))
-        if i==thres/2:
-            break
-    
+        val = _normalize(val)
+        if val and val not in seen and len(answers) < thres:
+            answers.append(val)
+            seen.add(val)
 
-    # ② 兜底：最后一个数字（完全没找到时）
+    for i, m in enumerate(_PAT_BOX.finditer(text)):
+        _add(m.group(1))
+        if i >= thres // 2:
+            break
+
+    for i, m in enumerate(_PAT_FINAL.finditer(text)):
+        _add(m.group(1))
+        if i >= thres // 2:
+            break
+
     if not answers:
         nums = _PAT_NUM.findall(text)
         if nums:
