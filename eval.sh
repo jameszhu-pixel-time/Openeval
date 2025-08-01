@@ -1,9 +1,9 @@
 python -m Openeval.run eval \
-  --eval_data  predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl \
+  --eval_data  predictions/openai/qwen2.5_instruct_7b/aime24_qwen2.5_7b_pred.jsonl \
   --mode       Objective \
-  --k          1 \
+  --k          1 8\
   -a           qwen2.5_7b \
-  --eval_out_dir     ./evaluations/test \
+  --eval_out_dir     ./evaluations/openai \
   --judge_endpoint http://10.200.250.35:7001/generate \
   --judge_model     /DATA/disk2/rlteam/models/checkpoint0724\
   --judge_host      10.200.250.35 \

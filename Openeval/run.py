@@ -50,7 +50,6 @@ def cmd_pipeline(args):
     """
     1) 调 run_infer，得到预测文件 (列表)
     2) 按同名规则调用 run_eval
-    #TODO eval for difficulty selection
     """
     # ---------- 步骤 1：推理 ----------
     logging.info("==> [Pipeline] Stage-1: Inference")

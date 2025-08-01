@@ -41,6 +41,7 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
 | **July 9** | Begin design of flexible registry functions    |
 | **July 12**| Build end-to-end pipeline; prepare HF API demo |
 | **July 28**| add difficult selection to pipeline function   |
+| **August 1**| add Openai API for infernence pipeline        |
 ---
 ## Quick Start
 - run `conda env create -f environment.yml`  or `pip install -r requirements.txt` to set up the environment.
@@ -76,5 +77,13 @@ A repository for evaluating and running inference on reasoning tasks using LLMs.
       - Evaluator: handles the evaluation logic, supports LLM judger and Objective judger.
       - Extractor: handles the extraction logic, supports Objective extractor.
     - Check entry point at` Openeval/eval/run_eval.py`
+    - Extractor result will be saved to debug directory, you can check both extractors and evaluations to validate the result
   - Logs:
     - view logs in `./logs`
+## New
+ - Vllm async Engine somehow have lower computing speed and it somtimes failed to stop at an early stage, therefore openai api is implemented for 
+ - Want to use Openai apis? we have update new features now:
+ - To use Openai apis ,just set the config endpoint to:
+ ```http://local_host:port/generate_openai```
+    - then it will automatically start the local or online model service on your machine
+

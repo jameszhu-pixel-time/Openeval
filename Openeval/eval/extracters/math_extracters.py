@@ -1,6 +1,6 @@
 
 from typing import Dict, List, Tuple, Callable, Any
-from ..postprocess.math.aime import extract_math_line, extract_aime_line
+from ..postprocess.math.aime import extract_math_line, extract_aime_line,extract_boxed_line
 from tqdm import tqdm
 from ..extracters import register
 # =========================================================
@@ -21,7 +21,7 @@ def extract_answer_math(sample: Dict,dataset_name: str) -> Tuple[List[List[str]]
     
     #### Post process to different datasets
     for response in preds:
-        ps=extract_math_line(response)## returns:[ans1,2,3.. from response1]
+        ps=extract_boxed_line(response)## returns:[ans1,2,3.. from response1]
         preds_post.append(ps)
     ref: str = str(sample.get("answer", "")).strip()
     return preds_post, ref

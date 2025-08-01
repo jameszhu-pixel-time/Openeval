@@ -4,10 +4,13 @@ from vllm.engine.arg_utils import AsyncEngineArgs
 from vllm.engine.async_llm_engine import AsyncLLMEngine
 from vllm.utils import random_uuid
 import asyncio
-from typing import List,Union
+from typing import List,Union,Dict
 import os
 from asyncio import Semaphore, gather
 import logging
+import openai
+from Openeval.infer.mp import generate_mp
+from concurrent.futures import ProcessPoolExecutor, as_completed
 def start_vllm_server(model_path, host="0.0.0.0", port=7000, tensor_parallel_size=1):
     """Starts a vLLM server."""
 
@@ -62,12 +65,36 @@ def start_vllm_server(model_path, host="0.0.0.0", port=7000, tensor_parallel_siz
             if e.response.status_code == 500:# 其他未知错误
                 logging.error("SERVER-500 detail: %s", e.response.text)
             raise HTTPException(status_code=500, detail=str(e))
+    #-----
+    
+    
+    @app.post("/generate_openai")
+    async def generate_openai_endpoint(request: GenerationRequest):
+        from concurrent.futures import ProcessPoolExecutor
 
+        prompts = request.prompt
+        if isinstance(prompts, str):
+            prompts = [prompts]
+        response = [None] * len(prompts)
+        host = "10.200.250.35"
+        with ProcessPoolExecutor(max_workers=len(prompts)) as pool:
+            fut_to_id = {
+                pool.submit(generate_mp, p, model_path, request.sampling_params, host, port): idx
+                for idx, p in enumerate(prompts)
+            }
+            for fut in fut_to_id:
+                response[fut_to_id[fut]] = fut.result()
+
+        return JSONResponse({'text': response})
+                
+            
+            
+            
     uvicorn.run(app, host=host, port=port)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="vLLM Server")
-    parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk2/rlteam/models/checkpoint0724")
+    parser.add_argument("--model", type=str, help="Path to the model",default="/DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host IP")
     parser.add_argument("--port", type=int, default=7005, help="Port number")
     parser.add_argument("-t","--tensor_parallel_size", type=int, default=1, help="Tensor parallel size")

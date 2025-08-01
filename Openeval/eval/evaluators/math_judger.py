@@ -26,9 +26,6 @@ def objective_math(preds: List[List[str]], ref: str, k: int = 1) -> bool:
     ref   = ref.strip()
     for pred_ans in preds: ##一个batch
         for pred_piece in pred_ans: 
-            if pred_piece+'.0' == ref:
-                flag=True
-                return flag
             if ref == pred_piece: ##表达式
                 flag=True
                 return flag
@@ -36,5 +33,7 @@ def objective_math(preds: List[List[str]], ref: str, k: int = 1) -> bool:
                 if Fraction(ref) == Fraction (pred_piece):
                     flag=True
                     return flag
+            
                 
     return flag
+
