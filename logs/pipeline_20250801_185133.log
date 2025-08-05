@@ -1,0 +1,14 @@
+2025-08-01 18:51:33 | INFO | root: ==> [Pipeline] Stage-1: Inference
+2025-08-01 18:51:33 | INFO | Openeval.datasets.utils.load_data: 开始处理 Openeval/datasets/test_data/aime24.jsonl
+2025-08-01 18:51:33 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_0：共渲染 30 条 prompt
+2025-08-01 18:51:33 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_0.jsonl
+2025-08-01 18:51:33 | INFO | Openeval.infer.run_infer: Reuse existing vLLM on 10.200.250.35:7004
+2025-08-01 18:51:33 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl 
+2025-08-01 18:51:33 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/generate "HTTP/1.1 404 Not Found"
+2025-08-01 18:51:35 | WARNING | Openeval.infer.run_infer: Retry 1/3: Client error '404 Not Found' for url 'http://10.200.250.35:7004/generate'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-08-01 18:51:35 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/generate "HTTP/1.1 404 Not Found"
+2025-08-01 18:51:37 | WARNING | Openeval.infer.run_infer: Retry 2/3: Client error '404 Not Found' for url 'http://10.200.250.35:7004/generate'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-08-01 18:51:37 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/generate "HTTP/1.1 404 Not Found"
+2025-08-01 18:51:37 | INFO | Openeval.infer.run_infer: ______DEBUGGING______

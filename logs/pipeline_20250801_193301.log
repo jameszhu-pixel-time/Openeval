@@ -1,0 +1,40 @@
+2025-08-01 19:33:01 | INFO | root: ==> [Pipeline] Stage-1: Inference
+2025-08-01 19:33:01 | INFO | Openeval.datasets.utils.load_data: 开始处理 Openeval/datasets/test_data/math500.jsonl
+2025-08-01 19:33:01 | INFO | Openeval.datasets.utils.load_data: 完成 math500_promptid_0：共渲染 500 条 prompt
+2025-08-01 19:33:01 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/math500_promptid_0.jsonl
+2025-08-01 19:33:01 | INFO | Openeval.infer.run_infer: Reuse existing vLLM on 10.200.250.35:7004
+2025-08-01 19:33:01 | INFO | Openeval.infer.run_infer: save to predictions/math500_promptid_0_qwen2.5_7b_1_pred.jsonl 
+2025-08-01 19:33:01 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-01 19:33:01 | INFO | root: saving to predictions/math500_promptid_0_qwen2.5_7b_1_pred.jsonl
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.390377 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.432457 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.378768 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.463364 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.490223 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.477222 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.432025 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.381361 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.417032 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.468462 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.475311 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.441102 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.395451 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.487018 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.482453 seconds
+2025-08-01 19:43:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.413508 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.953299 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.897455 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.951711 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.929016 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.890817 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.847207 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.984086 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.861444 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.764250 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.983823 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.943684 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.817770 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.817373 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.926627 seconds
+2025-08-01 19:53:02 | INFO | openai._base_client: Retrying request to /chat/completions in 0.952275 seconds
+2025-08-01 19:53:03 | INFO | openai._base_client: Retrying request to /chat/completions in 0.970020 seconds
