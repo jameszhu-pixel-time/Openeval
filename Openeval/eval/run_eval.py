@@ -65,7 +65,7 @@ def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     )
     p.add_argument("-a","--model_abbr",default="qwen3")
     # debug
-    p.add_argument("-ex","--extraction_path",default="./debugging/eval_extract")
+    p.add_argument("-ex","--extraction_path",default="./debugging/eval_extract_7b_1")
 
     # vLLM 服务相关（仅 LLM 模式用得到）
     p.add_argument("--judge_endpoint", default="http://10.200.250.35:7000/generate")

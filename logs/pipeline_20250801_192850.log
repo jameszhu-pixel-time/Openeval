@@ -1,0 +1,21 @@
+2025-08-01 19:28:50 | INFO | root: ==> [Pipeline] Stage-1: Inference
+2025-08-01 19:28:50 | INFO | Openeval.datasets.utils.load_data: 开始处理 Openeval/datasets/test_data/aime24.jsonl
+2025-08-01 19:28:50 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_0：共渲染 30 条 prompt
+2025-08-01 19:28:50 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_0.jsonl
+2025-08-01 19:28:50 | INFO | Openeval.infer.run_infer: Reuse existing vLLM on 10.200.250.35:7004
+2025-08-01 19:28:50 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl 
+2025-08-01 19:28:50 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-01 19:28:50 | INFO | root: saving to predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"
+2025-08-01 19:28:50 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7004/v1/chat/completions "HTTP/1.1 404 Not Found"

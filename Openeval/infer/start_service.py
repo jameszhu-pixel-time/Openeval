@@ -1,10 +1,10 @@
 import subprocess
 import logging
 def launch_vllm_server(
-    model: str = "/DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b",
-    port: int = 7004,
+    model: str = '/DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_32b',
+    port: int = 7000,
     host: str = "0.0.0.0",
-    tensor_parallel: int = 1,
+    tensor_parallel: int =4,
     max_model_len: int = None,
     cuda_devices: str = "0,1"
 ):

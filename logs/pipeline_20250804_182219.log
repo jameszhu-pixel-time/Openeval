@@ -1,0 +1,57 @@
+2025-08-04 18:22:19 | INFO | root: ==> [Pipeline] Stage-1: Inference
+2025-08-04 18:22:19 | INFO | Openeval.datasets.utils.load_data: 开始处理 Openeval/datasets/test_data/aime24.jsonl
+2025-08-04 18:22:19 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_0：共渲染 30 条 prompt
+2025-08-04 18:22:19 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_0.jsonl
+2025-08-04 18:22:19 | INFO | Openeval.infer.run_infer: Reuse existing vLLM on 10.200.250.35:7000
+2025-08-04 18:22:19 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl 
+2025-08-04 18:22:19 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-04 18:22:19 | INFO | root: saving to predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl
+2025-08-04 18:22:27 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:28 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:29 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:29 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:30 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:30 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:31 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:32 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:32 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:32 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:34 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:34 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:34 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:35 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:36 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:41 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:41 | INFO | Openeval.infer.run_infer: ______DEBUGGING______
+2025-08-04 18:22:41 | INFO | Openeval.infer.run_infer: preds:16
+2025-08-04 18:22:41 | INFO | Openeval.infer.run_infer: 8
+2025-08-04 18:22:41 | INFO | Openeval.infer.run_infer: chunk:16
+2025-08-04 18:22:41 | INFO | Openeval.infer.run_infer: chunk id[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+2025-08-04 18:22:49 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:51 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:51 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:52 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:52 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:53 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:53 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:53 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:56 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:22:57 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:23:01 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:23:13 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:23:19 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:23:43 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7000/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer: ______DEBUGGING______
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer: preds:14
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer: 8
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer: chunk:14
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer: chunk id[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
+2025-08-04 18:23:43 | INFO | Openeval.infer.run_infer:  aime24_promptid_0 done, saved to predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl
+2025-08-04 18:23:43 | INFO | root: ==> [Pipeline] Stage-2: Evaluation
+2025-08-04 18:23:43 | INFO | root: strat evaluating predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl 
+2025-08-04 18:23:43 | INFO | Openeval.eval.run_eval: Processing file: predictions/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl
+2025-08-04 18:23:43 | INFO | Openeval.eval.run_eval: loading completes
+2025-08-04 18:23:43 | INFO | Openeval.eval.evaluators.evaluate: output extraction finished:
+2025-08-04 18:23:43 | INFO | Openeval.eval.evaluators.evaluate: debugging mode: output extraction file to./debugging/qwen7b/aime24_promptid_0_qwen2.5_32b_1_pred.jsonl 
+2025-08-04 18:23:43 | INFO | Openeval.eval.run_eval: Saved to evaluations/qwen32b/qwen32b_aime24_promptid_0_qwen2.5_32b_1_eval.jsonl 
+2025-08-04 18:23:43 | INFO | root: result write to ./outcome/qwen32b.jsonl
