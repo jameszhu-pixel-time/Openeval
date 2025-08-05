@@ -67,7 +67,7 @@ def start_vllm_server(model_path, host="0.0.0.0", port=7000, tensor_parallel_siz
             raise HTTPException(status_code=500, detail=str(e))
     #-----
     
-    
+    #deprecated
     @app.post("/generate_openai")
     async def generate_openai_endpoint(request: GenerationRequest):
         from concurrent.futures import ProcessPoolExecutor

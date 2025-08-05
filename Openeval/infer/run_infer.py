@@ -7,6 +7,7 @@ High-throughput inference runner for vLLM HTTP server.
 import argparse, asyncio, json, logging, os, sys
 from pathlib import Path
 from typing import Dict, List,Union
+import subprocess
 
 import httpx
 from tqdm.asyncio import tqdm  # pip install tqdm
@@ -216,11 +217,19 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
     ## 协程
     proc=None ##自身开启的进程
     output_files=[]
+    ##新接口引入：
+    openai = args.endpoint.split("/")[-1]=='generate_openai'
     try:
         if not port_open(args.host, args.port):
-            logger.info("No active vLLM found — launching…")
-            proc = launch_vllm_proc(args.model, args.host,
-                                    args.port, args.tensor_parallel_size)
+            
+            if not openai:## vllm 
+                logger.info("No active vLLM found — launching vllm")
+                proc = launch_vllm_proc(args.model, args.host,
+                                        args.port, args.tensor_parallel_size)
+            else:
+                logger.info("No active vLLM found — launching Openai-based vllm")
+                proc = launch_vllm_server(args.model, args.host,
+                                        args.port, args.tensor_parallel_size)## 不传maxtoken 防止爆
 
             if not wait_port(args.host, args.port, 180):
                 logger.error("vLLM failed to open port in 180s")
@@ -247,9 +256,18 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
         if proc is not None and psutil.pid_exists(proc.pid):
             logger.info("Shutting down vLLM subprocess group …")
             _kill_proc_tree(proc.pid)
-            if proc.is_alive():
-                logger.warning("vLLM did not exit in 10 s — killing")
-                proc.kill()
+
+            if isinstance(proc, subprocess.Popen):
+                if proc.poll() is None:
+                    logger.warning("vLLM did not exit in 10 s — killing")
+                    proc.kill()
+            elif isinstance(proc, Process):
+                if proc.is_alive():
+                    logger.warning("vLLM multiprocessing.Process did not exit in 10 s — killing")
+                    proc.terminate()
+            else:
+                logger.warning("Unknown process type, unable to determine if it exited cleanly.")
+
             logger.info("vLLM subprocess exited")
     return output_files
 

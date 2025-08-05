@@ -2,8 +2,8 @@ import subprocess
 import logging
 def launch_vllm_server(
     model: str = "/DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b",
-    port: int = 7004,
     host: str = "0.0.0.0",
+    port: int = 7004,
     tensor_parallel: int = 1,
     max_model_len: int = None,
     cuda_devices: str = "0,1"
@@ -18,7 +18,7 @@ def launch_vllm_server(
     if max_model_len is not None:
         cmd += ["--max-model-len", str(max_model_len)]
 
-    logging.info("[INFO] Launching: {' '.join(cmd)}")
+    logging.info(f"[INFO] Launching: {' '.join(cmd)}")
     process = subprocess.Popen(cmd)
     return process  # 可供后续使用，如 terminate()
 
