@@ -1,0 +1,64 @@
+{
+  "pass@1": [
+    {
+      "preds": [
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "3"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "\\frac{81}{5}"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "64"
+        ]
+      ],
+      "ref": "204.0"
+    }
+  ],
+  "pass@8": [
+    {
+      "preds": [
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "3"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "\\frac{81}{5}"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "64"
+        ]
+      ],
+      "ref": "204.0"
+    }
+  ]
+}

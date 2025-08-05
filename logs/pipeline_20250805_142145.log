@@ -1,0 +1,63 @@
+2025-08-05 14:21:45 | INFO | root: ==> [Pipeline] Stage-1: Inference
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 开始处理 Openeval/datasets/test_data/aime24.jsonl
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_0：共渲染 1 条 prompt
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_0.jsonl
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_1：共渲染 1 条 prompt
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_1.jsonl
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 完成 aime24_promptid_2：共渲染 1 条 prompt
+2025-08-05 14:21:45 | INFO | Openeval.datasets.utils.load_data: 结果已写入 Openeval/datasets/formatted_data/aime24_promptid_2.jsonl
+2025-08-05 14:21:45 | INFO | Openeval.infer.run_infer: No active vLLM found — launching Openai-based vllm
+2025-08-05 14:21:45 | INFO | root: [INFO] Launching: vllm serve /DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b --host 10.200.250.35 --port 7003 --tensor-parallel-size 2
+2025-08-05 14:22:41 | INFO | Openeval.infer.run_infer: vLLM is ready
+2025-08-05 14:22:41 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:22:41 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-05 14:22:41 | INFO | root: saving to predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl
+2025-08-05 14:23:24 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7003/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: ______DEBUGGING______
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: preds:1
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: 8
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: chunk:1
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: chunk id[0]
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer:  aime24_promptid_0 done, saved to predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_1_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:23:24 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-05 14:23:25 | INFO | root: saving to predictions/aime24_promptid_1_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:10 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7003/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: ______DEBUGGING______
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: preds:1
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: 8
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: chunk:1
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: chunk id[0]
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer:  aime24_promptid_1 done, saved to predictions/aime24_promptid_1_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: save to predictions/aime24_promptid_2_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:10 | INFO | Openeval.infer.run_infer: Debug mode with openai completion
+2025-08-05 14:24:10 | INFO | root: saving to predictions/aime24_promptid_2_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:15 | INFO | httpx: HTTP Request: POST http://10.200.250.35:7003/v1/chat/completions "HTTP/1.1 200 OK"
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: ______DEBUGGING______
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: preds:1
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: 8
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: chunk:1
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: chunk id[0]
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer:  aime24_promptid_2 done, saved to predictions/aime24_promptid_2_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:15 | INFO | Openeval.infer.run_infer: Shutting down vLLM subprocess group …
+2025-08-05 14:24:18 | INFO | Openeval.infer.run_infer: vLLM subprocess exited
+2025-08-05 14:24:18 | INFO | root: ==> [Pipeline] Stage-2: Evaluation
+2025-08-05 14:24:18 | INFO | root: strat evaluating predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Processing file: predictions/aime24_promptid_0_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: loading completes
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: output extraction finished:
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: debugging mode: output extraction file to./debugging/qwen7b/aime24_promptid_0_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Saved to evaluations/qwen7b/qwen7B_aime24_promptid_0_qwen2.5_7b_eval.jsonl 
+2025-08-05 14:24:18 | INFO | root: strat evaluating predictions/aime24_promptid_1_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Processing file: predictions/aime24_promptid_1_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: loading completes
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: output extraction finished:
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: debugging mode: output extraction file to./debugging/qwen7b/aime24_promptid_1_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Saved to evaluations/qwen7b/qwen7B_aime24_promptid_1_qwen2.5_7b_eval.jsonl 
+2025-08-05 14:24:18 | INFO | root: strat evaluating predictions/aime24_promptid_2_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Processing file: predictions/aime24_promptid_2_qwen2.5_7b_pred.jsonl
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: loading completes
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: output extraction finished:
+2025-08-05 14:24:18 | INFO | Openeval.eval.evaluators.evaluate: debugging mode: output extraction file to./debugging/qwen7b/aime24_promptid_2_qwen2.5_7b_pred.jsonl 
+2025-08-05 14:24:18 | INFO | Openeval.eval.run_eval: Saved to evaluations/qwen7b/qwen7B_aime24_promptid_2_qwen2.5_7b_eval.jsonl 
+2025-08-05 14:24:18 | INFO | root: result write to ./outcome/qwen7B.jsonl

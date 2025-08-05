@@ -1,0 +1,21 @@
+{
+  "aime24_promptid_0_qwen2.5_7b_pred.jsonl": [
+    {
+      "acc@1": 0.0,
+      "total": 1,
+      "correct": 0
+    },
+    {
+      "acc@8": 0.0,
+      "total": 1,
+      "correct": 0
+    }
+  ],
+  "pass@1 detailed id": [
+    false
+  ],
+  "pass@8 detailed id": [
+    false
+  ],
+  "model_name": "qwen7B"
+}

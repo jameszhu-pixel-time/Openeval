@@ -1,0 +1,64 @@
+{
+  "pass@1": [
+    {
+      "preds": [
+        [
+          "\\mathbf{4.\\overline{5}}~minutes"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "139mins"
+        ],
+        [
+          "36"
+        ],
+        [
+          "300~minutes"
+        ]
+      ],
+      "ref": "204.0"
+    }
+  ],
+  "pass@8": [
+    {
+      "preds": [
+        [
+          "\\mathbf{4.\\overline{5}}~minutes"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "No answer"
+        ],
+        [
+          "139mins"
+        ],
+        [
+          "36"
+        ],
+        [
+          "300~minutes"
+        ]
+      ],
+      "ref": "204.0"
+    }
+  ]
+}

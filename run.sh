@@ -5,8 +5,8 @@ python -m Openeval.run pipeline \
   --batch_size 16 \
   --sampling_params '{"temperature":0.85,"top_p":0.85,"max_tokens":8192,"n":8,"presence_penalty":1,"repetition_penalty":1.2}' \
   --model /DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_7b \
-  --endpoint http://10.200.250.35:7004/generate_openai \
-  --port 7004 \
+  --endpoint http://10.200.250.35:7003/generate_openai \
+  --port 7003 \
   --tensor_parallel_size 2 \
   --mode Objective \
   --k 1 8 \
