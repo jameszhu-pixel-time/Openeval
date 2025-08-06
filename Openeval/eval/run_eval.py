@@ -11,7 +11,7 @@ import logging
 from pathlib import Path 
 import glob
 ##先导入，注册才生效
-import Openeval.eval.evaluators.math_judger,Openeval.eval.extracters.math_extracters,Openeval.eval.utils
+import Openeval.eval.evaluators.math_judger,Openeval.eval.extracters.math_extracters,Openeval.eval.utils,Openeval.eval.evaluators.code_judger
 
 """
 ===========================================================

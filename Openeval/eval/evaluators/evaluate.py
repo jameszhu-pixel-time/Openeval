@@ -37,7 +37,7 @@ def evaluate_objective(details: List[Dict], dataset_name: str,
             total += 1
             idx.append(flag)
             if output:
-                ex_record[f"pass@{k_}"].append({'preds':preds,'ref':ref})
+                ex_record[f"pass@{k_}"].append({'preds':preds,'ref':ref,'flag':flag})
         result[file_name].append({"acc@%d" % k_: correct / total if total else 0.0,
         "total": total, "correct": correct}) ##统计 str：Dict
         result[f"pass@{k_} detailed id"]=idx
