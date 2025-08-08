@@ -1,0 +1,17 @@
+{
+  "aime25_promptid_1_debug_pred.jsonl": [
+    {
+      "acc@1": 0.0,
+      "total": 0,
+      "correct": 0
+    },
+    {
+      "acc@8": 0.0,
+      "total": 0,
+      "correct": 0
+    }
+  ],
+  "pass@1 detailed id": [],
+  "pass@8 detailed id": [],
+  "model_name": "debug"
+}
