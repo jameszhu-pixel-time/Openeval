@@ -261,13 +261,10 @@ async def main(args: argparse.Namespace,return_paths:bool = True)->List:
                 if proc.poll() is None:
                     logger.warning("vLLM did not exit in 10 s — killing")
                     proc.kill()
-            elif isinstance(proc, Process):
+            else :
                 if proc.is_alive():
                     logger.warning("vLLM multiprocessing.Process did not exit in 10 s — killing")
                     proc.terminate()
-            else:
-                logger.warning("Unknown process type, unable to determine if it exited cleanly.")
-
             logger.info("vLLM subprocess exited")
     return output_files
 

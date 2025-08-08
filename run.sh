@@ -1,20 +1,20 @@
 # 3) 一条龙：推理 + 评测 (pipeline)
 # ──────────────────────────────────────────────────────────────
 python -m Openeval.run pipeline \
-  --data ./Openeval/datasets/test_data/aime24.jsonl \
-  --batch_size 16 \
-  --sampling_params '{"temperature":0.8,"top_p":0.9,"max_tokens":8192,"n":8,"presence_penalty":0.0,"repetition_penalty":1.05}' \
-  --model '/DATA/disk1/zhurui/Reasoning/StageI/Openeval/models/qwen2.5_instruct_32b' \
-  --endpoint http://10.200.250.35:7000/generate \
-  --port 7000 \
-  --tensor_parallel_size 1 \
+  --data ./Openeval/datasets/test_data/aime25.jsonl \
+  --batch_size 64 \
+  --sampling_params '{"temperature":0.5,"top_p":0.9,"max_tokens":8192,"n":8,"presence_penalty":0.0,"repetition_penalty":1.05}' \
+  --model '/DATA/disk2/rlteam/models/checkpoint0807_240' \
+  --endpoint http://10.200.250.35:7001/generate_openai \
+  --port 7001 \
+  --tensor_parallel_size 2 \
   --mode Objective \
   --k 1 8 \
-  --model_abbr qwen32b \
-  --eval_out_dir evaluations/qwen32b \
+  --model_abbr qwen7b \
+  --eval_out_dir evaluations/qwen7b \
   --judge_model /DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B \
   --difficulty_selection \
-  --m_abbr qwen2.5_32b_1 \
+  --m_abbr qwen2.5_7b_checkpoint0807_240_aime25 \
   -ex ./debugging/qwen7b
 
   
