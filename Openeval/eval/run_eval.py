@@ -65,8 +65,9 @@ def build_cli(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
     )
     p.add_argument("-a","--model_abbr",default="qwen3")
     # debug
-    p.add_argument("-ex","--extraction_path",default="./debugging/eval_extract")
-
+    p.add_argument("-ex","--extraction_path",default="./debugging/eval_extract_7b_3")
+    # 对测试部分启用 难度选择
+    p.add_argument("-ed","--difficulty_selection_eval",type=int,default=0,help="perform difficulty selection on prediction based on pass k rate")
     # vLLM 服务相关（仅 LLM 模式用得到）
     p.add_argument("--judge_endpoint", default="http://10.200.250.35:7000/generate")
     p.add_argument("--judge_model", default="/DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B")

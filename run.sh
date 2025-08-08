@@ -10,12 +10,13 @@ python -m Openeval.run pipeline \
   --tensor_parallel_size 2 \
   --mode Objective \
   --k 1 8 \
-  --model_abbr qwen7B \
-  --eval_out_dir evaluations/qwen7b \
+  --model_abbr debug \
+  --eval_out_dir evaluations/debug \
   --judge_model /DATA/disk1/wsh/DATA/disk1/wsh/MScache/models/Qwen/Qwen3-32B \
   --difficulty_selection \
-  --m_abbr qwen2.5_7b \
-  -ex ./debugging/qwen7b
+  --difficulty_selection_eval 8\
+  --m_abbr debug \
+  -ex ./debugging/debug
 
   
                                    
@@ -25,3 +26,4 @@ python -m Openeval.run pipeline \
 # --difficulty_selection 模式： 你只能指定一个数据集， main 会讲多个prompt 分发给该dataset，注意，你需要使用 List[dict]
 #,并储存至Openeval/datasets/prompts/difficult_selection.py
 ##使用本地openai 接口 --endpoint http://10.200.250.35:7004/generate_openai 
+# --difficulty_selection_eval 8\ 指定pass@8=的结果作为难度选择，默认为0，即不进行

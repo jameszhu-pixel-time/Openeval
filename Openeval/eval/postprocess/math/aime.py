@@ -132,9 +132,14 @@ def remove_boxed(s):
 
     left = "\\boxed{"
 
-    assert s[: len(left)] == left
-    assert s[-1] == "}"
-
+    # assert s[: len(left)] == left ,s
+    # assert s[-1] == "}" ,s
+    if s[: len(left)] != left:
+        print(f"invalid last boxed string: {s[:min(10,len(s))]}")
+        return None
+    if s[-1] != "}":
+        print(f"invalid last boxed string: {s[:min(10,len(s))]}")
+        return None
     return s[len(left) : -1]
 
 def last_boxed_only_string(string):
