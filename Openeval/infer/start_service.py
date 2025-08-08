@@ -14,7 +14,6 @@ def launch_vllm_server(
         "--port", str(port),
         "--tensor-parallel-size", str(tensor_parallel),
     ]
-    logging.info(f"debug:{cmd},{type(cmd[4])}")
     if max_model_len is not None:
         cmd += ["--max-model-len", str(max_model_len)]
 

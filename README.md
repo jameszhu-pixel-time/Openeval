@@ -1,6 +1,6 @@
 # Openeval
 # Reasoning: Evaluation & Inference
-
+**English** | [中文说明](./README_zh.md)
 A repository for evaluating and running inference on reasoning tasks using LLMs.
 
 ---

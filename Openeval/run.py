@@ -17,6 +17,7 @@ import asyncio
 import logging
 import glob
 import os
+import pprint
 # ----------------------------------------------------------------------
 # 直接复用子模块里的 main() / 函数
 run_infer = importlib.import_module("Openeval.infer.run_infer")
@@ -43,14 +44,49 @@ def cmd_eval(args):
     if not matched_files:
         raise FileNotFoundError(f"No file matches: {args.eval_data}")
     args.matched_files = matched_files
-    run_eval.main(args)
+    out_fp = run_eval.main(args)
     ##逻辑
+    if args.difficulty_selection_eval:
+        statistic = None  # 避免变量未定义
+        logging.info(f"Performing Difficulty Selection on pass@{args.difficulty_selection_eval}")
+        for i, fp in enumerate(out_fp):
+            with open(fp, mode='r') as f:
+                data = json.load(f)
+                try:
+                    items = data[f"pass@{args.difficulty_selection_eval} detailed id"]
+                    
+                except (KeyError, TypeError):
+                    logging.warning(f"文件 {fp} 中没有 pass@{args.difficulty_selection_eval} detailed id 字段或格式错误")
+                    continue
 
+                length = len(items)
+                if i == 0:
+                    statistic = {idx: 0 for idx in range(length)}
+
+                for j, item in enumerate(items):
+                    if item :
+                        statistic[j] += 1
+
+        if statistic is not None:
+            out = os.path.join(OUTCOME, args.model_abbr + '.jsonl')
+            Path(OUTCOME).mkdir(parents=True,exist_ok=True)
+            with open(out, mode='w', encoding='utf-8') as f:
+                for key, value in statistic.items():
+                    f.write(json.dumps({key: value}) + '\n')
+            logging.info(f'Difficult selection \'s result write to {out}')
+        else:
+            logging.warning("没有任何文件成功统计，未写出结果")
+            
+            
 def cmd_pipeline(args):
     """
     1) 调 run_infer，得到预测文件 (列表)
     2) 按同名规则调用 run_eval
     """
+    # --valid--config
+    assert args.difficulty_selection_eval and str(args.difficulty_selection_eval) not in args.k ,f"""Difficult selection based on pass@{args.difficulty_selection_eval} failed,
+        Because evaluation only implements pass@{args.k}
+        """
     # ---------- 步骤 1：推理 ----------
     logging.info("==> [Pipeline] Stage-1: Inference")
     preds = asyncio.run(run_infer.main(args, return_paths=True)) # 改写 run_infer.main 支持返回路径 list
@@ -66,15 +102,16 @@ def cmd_pipeline(args):
         name = Path(pred_fp).stem.replace("_pred", "")
         eval_args.matched_files = [eval_args.eval_data] ## 循环在外面
         out_fp = run_eval.main(eval_args)
-    if args.difficulty_selection:
+    if args.difficulty_selection or eval_args.difficulty_selection_eval:
         statistic = None  # 避免变量未定义
+        logging.info(f"Performing Difficulty Selection on pass@{args.difficulty_selection_eval}")
         for i, fp in enumerate(out_fp):
             with open(fp, mode='r') as f:
                 data = json.load(f)
                 try:
-                    items = data["pass@1 detailed id"]
+                    items = data[f"pass@{args.difficulty_selection_eval} detailed id"]
                 except (KeyError, TypeError):
-                    logging.warning(f"文件 {fp} 中没有 pass@1 detailed id 字段或格式错误")
+                    logging.warning(f"文件 {fp} 中没有 pass@{eval_args.difficulty_selection_eval} detailed id 字段或格式错误")
                     continue
 
                 length = len(items)
@@ -82,7 +119,7 @@ def cmd_pipeline(args):
                     statistic = {idx: 0 for idx in range(length)}
 
                 for j, item in enumerate(items):
-                    if item == 'true':
+                    if item :
                         statistic[j] += 1
 
         if statistic is not None:
@@ -92,7 +129,7 @@ def cmd_pipeline(args):
             with open(out, mode='w', encoding='utf-8') as f:
                 for key, value in statistic.items():
                     f.write(json.dumps({key: value}) + '\n')
-            logging.info(f'result write to {out}')
+            logging.info(f'Difficult selection \'s result write to {out}')
         else:
             logging.warning("没有任何文件成功统计，未写出结果")
                     
